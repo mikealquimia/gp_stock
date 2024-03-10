@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="stock_picking_product_request">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <div class="watermark_logo"
+                            style="position:absolute;opacity:0.2;front-size:30cm;top:10cm;width:100%;text-align:center;z-index:600;color:red">
+                            <t t-if="o.product_request_state == 'send'">
+                                <strong style="font-size:800%">ENTREGADO</strong>
+                            </t>
+                            <t t-if="o.product_request_state == 'done'">
+                                <strong style="font-size:800%">SOLICITADO</strong>
+                            </t>
+                            <t t-if="o.product_request_state == 'draft'">
+                                <strong style="font-size:800%">NO SE HA SOLICITADO</strong>
+                            </t>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-5">
+                                <div>
+                                    <h4>
+                                        <strong>Solicitud de Material</strong>
+                                    </h4>
+                                </div>
+                                <div>
+                                    <h4>
+                                        <span t-field="o.name" />
+                                    </h4>
+                                </div>
+                                <div t-if="o.origin">
+                                    <span>Venta: <t t-esc="o.origin"></t></span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="col-auto mw-100 mb-2">
+                                    <span><strong>Departamento: </strong><t t-esc="o.area_product_request_id.name"/></span>
+                                </div>
+                                <div class="col-auto mw-100 mb-2">
+                                    <span><strong>Solicitado: </strong>______________________</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="col-auto mw-100 mb-2">
+                                    <span>
+                                        <strong>Fecha Solicitado: </strong>
+                                        <t t-esc="o.date_product_request" />
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <strong>Cantidad Pedida</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Producto</strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="lines"
+                                    t-value="o.move_lines.filtered(lambda x: x.product_uom_qty)" />
+                                <t t-foreach="lines" t-as="move">
+                                    <t>
+                                        <tr t-if="not o.product_id.bom_ids">
+                                            <td>
+                                                <span t-field="move.product_uom_qty"
+                                                    t-options='{"precision": 0}' />
+                                            </td>
+                                            <td>
+                                                <span t-field="move.product_id" />
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="o.product_id.bom_ids">
+                                        <tr>
+                                            <td colspan="3">
+                                                <span t-field="move.product_id" />
+                                            </td>
+                                        </tr>
+                                        <t t-foreach="o.product_id.bom_ids" t-as="bom">
+                                            <tr t-foreach="bom.bom_line_ids" t-as="bom_line">
+                                                <t t-set="qty_component"
+                                                    t-value='bom_line.product_qty*move.product_uom_qty' />
+                                                <td>
+                                                    <span t-esc="qty_component"
+                                                        t-esc-options='{"precision": 0}' />
+                                                </td>
+                                                <td colspan="2">
+                                                    <span t-esc="bom_line.product_id.name" />
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </t>
+                            </tbody>
+                        </table>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-auto mw-100 mb-2">
+                                FIRMA SOLICITANTE:_____________________________
+                            </div>
+                            <div class="col-auto mw-100 mb-2">
+                                FIRMA BODEGA:__________________________
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-auto mw-100 mb-2">
+                                FIRMA Recibido:_____________________________
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="gp_stock_picking_product_request" model="ir.actions.report">
+        <field name="name">Solicitud de Material a Bodega</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">gp_stock.stock_picking_product_request</field>
+        <field name="report_file">gp_stock.stock_picking_product_request_report</field>
+        <field name="print_report_name">'SMB de OT - %s' % (object.name)</field>
+    </record>
+
+</odoo>

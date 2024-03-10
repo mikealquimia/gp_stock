@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_stock_move_product_request" model="ir.ui.view">
+            <field name="name">Establecer Materia Prima</field>
+            <field name="model">stock.move.product.request</field>
+            <field name="arch" type="xml">
+                <form string="Establecer Materia Prima">
+                    <p class="oe_grey">
+                        Establecer los componentes a solicitar a Bodega/Fabrica para crear las solicitudes de producto respectivo.
+                    </p>
+                    <field name="name" invisible="1"/>
+                    <field name="line_ids" context="{'form_view_ref':'gp_stock.stock_request_stock_move_form'}">
+                        <tree create="false" delete="false" >
+                            <field name="name" invisible="1"/>
+                            <field name="product_id"/>
+                            <field name="state"/>
+                            <field name="bom_line_ids"/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button name="set_component" string="Establecer Materia Prima" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_stock_move_product_request" model="ir.actions.act_window">
+            <field name="name">Establecer Materia Prima</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.move.product.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="stock.model_stock_picking" />
+        </record>
+
+</odoo>
