@@ -34,6 +34,13 @@ class StockMoveBomLine(models.Model):
     stock_move_id = fields.Many2one('stock.move', string="Movimiento de Producto")
     product_id = fields.Many2one('product.product', string="Producto")
     product_qty = fields.Float(string="Cantidad")
-    uom_id = fields.Many2one('uom.uom', string="Unidad de medida")
+    uom_category_id = fields.Many2one('uom.category', string="Categoría de la unidad de medida")
+    uom_id = fields.Many2one('uom.uom', string="Unidad de medida", domain="[('category_id','=',uom_category_id)]")
     area_id = fields.Many2one('production.area', string="Departamento/Area")
     warehouse_id = fields.Many2one('stock.warehouse', string="Bodega a Solicitar")
+
+    @api.multi
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        for rec in self:
+            rec.uom_id = rec.product_id.uom_id.id

@@ -118,6 +118,15 @@ class StockPicking(models.Model):
                                             'area':area.id,
                                             'warehouse':warehouse.id}
                                         line_ids.append(vals)
+                    for line_without_bom in rec.move_ids_without_package.filtered(lambda l : not l.product_id.bom_ids):
+                        for component in line_without_bom.bom_line_ids:
+                            if component.area_id.id == area.id and component.warehouse_id.id == warehouse.id:
+                                vals = {'product_id':component.product_id.id,
+                                        'product_uom_qty':component.product_qty,
+                                        'product_uom_id':component.uom_id.id,
+                                        'area':area.id,
+                                        'warehouse':warehouse.id}
+                                line_ids.append(vals)
                     if len(line_ids) > 0:
                         for line in line_ids:
                             picking_product_request_id = False
@@ -163,10 +172,6 @@ class StockPicking(models.Model):
                                 'reference':picking_product_request_id.name,}
                             self.env['stock.move'].create(vals_line)
                         picking_product_request_id.action_confirm()
-            for line_without_bom in rec.move_ids_without_package.filtered(lambda l : not l.product_id.bom_ids):
-                if line_without_bom.bom_line_ids:
-                    #agregar logica de creación de stock.move en nuevos stock.picking
-                    print('s')
             for line_stock in rec.move_ids_without_package:
                 line_stock.write({'product_request_created':True})
         return
