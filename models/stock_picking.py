@@ -33,7 +33,9 @@ class StockPicking(models.Model):
             rec.product_request_warehouse = rec.picking_type_id.product_request_warehouse
             if rec.count_product_request_stock_picking > 0:
                 rec.stock_picking_type_product_request = False
-
+            if rec.state != 'assigned':
+                rec.stock_picking_type_product_request = False
+                
     @api.one
     def _computed_count_product_request(self):
         for rec in self:
