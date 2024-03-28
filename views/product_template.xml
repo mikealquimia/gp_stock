@@ -8,12 +8,12 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
           <xpath expr="//notebook" position="inside">
-              <page string="Punto de Control de Calidad">
+              <page string="Punto de Control de Calidad" groups="gp_stock.group_gp_stock_admin_quality_control">
                 <separator string="Punto de control" />
                 <field name="quality_control_test" widget="one2many">
                   <tree editable="bottom">
                     <field name="name"/>
-                    <field name="production_are_id"/>
+                    <field name="production_area_id"/>
                   </tree>
                 </field>
               </page>

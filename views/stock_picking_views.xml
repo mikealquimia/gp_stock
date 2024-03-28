@@ -42,8 +42,8 @@
                     <field name="purchase_requisition" invisible="1" />
                     <field name="production_area_check" invisible="1" />
                     <field name="product_request_state" invisible="1" />
-                    <field name="stock_picking_type_product_request" invisible="1"/>
-                    <field name="product_request_warehouse" invisible="1"/>
+                    <field name="stock_picking_type_product_request" invisible="1" />
+                    <field name="product_request_warehouse" invisible="1" />
                     <button name="create_purchase_requisition" type="object"
                         string="Crear Acuerdo de compra"
                         attrs="{'invisible': [('purchase_requisition','=',False)]}" />
@@ -53,17 +53,20 @@
                         attrs="{'invisible': ['|',('product_request_state','!=','draft'),('product_request_warehouse','=',False)]}" />
                     <button name="action_product_request_done"
                         groups="gp_stock.group_gp_stock_admin_product_request" type="object"
-                        string="Despachar de Bodega" class="oe_highlight" 
+                        string="Despachar de Bodega" class="oe_highlight"
                         attrs="{'invisible': ['|',('product_request_state','!=','done'),('product_request_warehouse','=',False)]}" />
                     <button name="print_production_request"
                         groups="gp_stock.group_gp_stock_admin_product_request" type="object"
                         string="Imprimir Solicitud de Producto"
-                        attrs="{'invisible': [('product_request_warehouse','=',False)]}"/>
+                        attrs="{'invisible': [('product_request_warehouse','=',False)]}" />
                     <button name="create_product_request"
                         groups="gp_stock.group_gp_stock_user_product_request" type="object"
                         string="Crear Solicitudes de Producto"
                         attrs="{'invisible': [('stock_picking_type_product_request','=',False)]}"
-                        class="oe_highlight"/>
+                        class="oe_highlight" />
+                    <button name="action_quality_control_test"
+                        groups="gp_stock.group_gp_stock_admin_quality_control" string="Control de Calidad"
+                        type="object" />
                 </xpath>
                 <xpath expr="//field[@name='origin']" position="after">
                     <field name="name_extern" groups="gp_stock.group_gp_stock_user"
@@ -72,16 +75,26 @@
                     <field name="purchase_requisition_id"
                         attrs="{'invisible': [('purchase_requisition','=',False)]}" />
                     <field name="product_request_state" readonly="1" />
-                    <field name="area_product_request_id" attrs="{'invisible': [('area_product_request_id','=',False)]}"/>
+                    <field name="area_product_request_id"
+                        attrs="{'invisible': [('area_product_request_id','=',False)]}" />
+                    <field name="actual_production_area_id"/>
                 </xpath>
 
                 <xpath expr="//button[@name='action_picking_move_tree']" position="before">
                     <button name="action_view_product_request_related" type="object"
                         class="oe_stat_button"
-                        icon="fa-pencil-square-o" attrs="{'invisible': [('count_product_request_stock_picking','=',0)]}"
+                        icon="fa-pencil-square-o"
+                        attrs="{'invisible': [('count_product_request_stock_picking','=',0)]}"
                         context="{'tree_view_ref':'gp_stock.product_request_stock_picking_tree'}">
                         <field name="count_product_request_stock_picking" widget="statinfo"
                             string="Solicitudes de Producto" />
+                    </button>
+                    <button name="action_view_quality_control" type="object"
+                        class="oe_stat_button"
+                        icon="fa-check-circle-o"
+                        attrs="{'invisible': [('count_point_quality_control','=',0)]}">
+                        <field name="count_point_quality_control" widget="statinfo"
+                            string="Calidad" />
                     </button>
                 </xpath>
                 <xpath expr="//form/sheet/notebook/page[2]" position="after">
@@ -111,7 +124,7 @@
                     <field name="date_product_request" />
                     <field name="product_request_state" invisible="0" />
                     <button name="action_product_request_done" string="Despachar de Bodega"
-                        type="object" groups="gp_stock.group_gp_stock_admin_product_request"/>
+                        type="object" groups="gp_stock.group_gp_stock_admin_product_request" />
                 </tree>
             </field>
         </record>

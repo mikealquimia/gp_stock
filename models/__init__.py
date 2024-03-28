@@ -11,3 +11,4 @@ from . import stock_warehouse
 from . import quality_control
 from . import product_category
 from . import product_template
+from . import hr_employee

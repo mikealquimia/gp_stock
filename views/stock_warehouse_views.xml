@@ -13,11 +13,16 @@
               <group string="Solicitud de Materia Prima">
                 <field name="picking_type_product_request_id" />
               </group>
-              <separator string="Punto de control" />
-              <field name="quality_control_test" widget="one2many">
+              <group string="Garantia o Errores">
+                <field name="picking_type_warranty_id" />
+                <field name="picking_type_error_id" />
+              </group>
+              <separator string="Punto de control" groups="gp_stock.group_gp_stock_admin_quality_control" />
+              <field name="quality_control_test" widget="one2many"
+                groups="gp_stock.group_gp_stock_admin_quality_control">
                 <tree editable="bottom">
-                  <field name="name"/>
-                  <field name="production_are_id"/>
+                  <field name="name" />
+                  <field name="production_area_id" />
                 </tree>
               </field>
             </page>

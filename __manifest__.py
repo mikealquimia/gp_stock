@@ -17,6 +17,7 @@
     'data': [
         'security/gp_stock_security.xml',
         'security/ir.model.access.csv',
+        'wizard/set_quality_control.xml',
         'views/production_areas_views.xml',
         'views/production_day_views.xml',
         'views/stock_move_views.xml',
@@ -27,6 +28,8 @@
         'views/stock_warehouse_views.xml',
         'views/product_category.xml',
         'views/product_template.xml',
+        'views/point_quality_control.xml',
+        'views/hr_employee.xml',
         'wizard/set_components_product_request.xml',
         'reports/report_production_day_views.xml',
         'reports/product_request_stock_picking.xml',
