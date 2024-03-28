@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_quality_control_request" model="ir.ui.view">
+        <field name="name">Control de Calidad</field>
+        <field name="model">quality.control.request</field>
+        <field name="arch" type="xml">
+            <form string="Control de Calidad">
+                <group>
+                    <group>
+                        <field name="name" invisible="1" />
+                        <field name="validate_check" invisible="1" />
+                        <field name="view_check" invisible="1" />
+                        <field name="employee_id" />
+                        <field name="production_area_id" readonly="1" />
+                    </group>
+                    <group>
+                        <field name="user_id" readonly="1" />
+                        <field name="date_start" readonly="1" />
+                        <field name="stock_picking_id" readonly="1" />
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Puntos de control">
+                        <field name="question_line_ids" >
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="view" widget="toggle_button"/>
+                                <field name="control_quality" widget="toggle_button"/>
+                                <field name="production_area_id" invisible="1"/>
+                                <field name="quality_id" invisible="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                <group attrs="{'invisible': ['|',('view_check','=',False),('validate_check','!=',False)]}">
+                    <field name="reason_lost_quality" attrs="{'required': ['&amp;',('view_check','!=',False),('validate_check','=',False)]}"/>
+                    <field name="preventive_action" />
+                    <field name="corrective_action" attrs="{'required': ['&amp;',('view_check','!=',False),('validate_check','=',False)]}"/>
+                    <field name="create_wake_up_call"/>
+                    <field name="stock_picking_type_lost_quality" attrs="{'required': ['&amp;',('view_check','!=',False),('validate_check','=',False)]}"/>
+                    <field name="product_line_ids">
+                        <tree editable="bottom">
+                            <field name="name" invisible="1"/>
+                            <field name="product_id"/>
+                            <field name="qty"/>
+                            <field name="uom_id"/>
+                            <field name="quality_control_id" invisible="1"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button name="validate" string="Aprobado" type="object"
+                        class="btn-primary"
+                        attrs="{'invisible': ['|',('view_check','=',False),('validate_check','=',False)]}" />
+                    <button name="lost_quality" string="Reprobar" type="object"
+                        class="btn-primary"
+                        attrs="{'invisible': ['|',('view_check','=',False),('validate_check','!=',False)]}" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_quality_control_test" model="ir.actions.act_window">
+        <field name="name">Control de Calidad</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">quality.control.request</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking" />
+    </record>
+
+</odoo>

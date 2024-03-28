@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <record id="gp_stock_product_category_form" model="ir.ui.view">
+      <field name="name">gp_stock_product_category_form</field>
+      <field name="model">product.category</field>
+      <field name="inherit_id" ref="product.product_category_form_view" />
+      <field name="arch" type="xml">
+        <xpath expr="//sheet" position="inside">
+          <notebook>
+            <page string="Ajustes Avanzados">
+              <separator string="Punto de control" groups="gp_stock.group_gp_stock_admin_quality_control"/>
+              <field name="quality_control_test" widget="one2many" groups="gp_stock.group_gp_stock_admin_quality_control">
+                <tree editable="bottom">
+                  <field name="name"/>
+                  <field name="production_area_id"/>
+                </tree>
+              </field>
+            </page>
+          </notebook>
+        </xpath>
+      </field>
+    </record>
+
+  </data>
+</odoo>

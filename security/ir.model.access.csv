@@ -12,3 +12,11 @@ access_production_day_line_user,production.day.line.user,model_production_day_li
 access_production_day_line_manager,production.day.line.manager,model_production_day_line,gp_stock.group_gp_stock_manager,1,1,1,1
 
 access_stock_move_bom_line,stock.move.bom.line,model_stock_move_bom_line,,1,1,1,1
+
+access_ach_quality_control,ach.quality.control,model_ach_quality_control,,1,0,0,0
+access_ach_quality_control,ach.quality.control,model_ach_quality_control,gp_stock.group_gp_stock_user_quality_control,1,1,1,0
+access_ach_quality_control,ach.quality.control,model_ach_quality_control,gp_stock.group_gp_stock_admin_quality_control,1,1,1,1
+
+access_point_quality_control,point.quality.control,model_point_quality_control,,1,1,1,0
+
+access_stage_production,stage.production,model_stage_production,,1,1,1,0

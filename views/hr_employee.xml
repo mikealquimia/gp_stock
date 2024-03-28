@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <record id="gp_stock_hr_employee_form" model="ir.ui.view">
+      <field name="name">hr.employee_form</field>
+      <field name="model">hr.employee</field>
+      <field name="inherit_id" ref="hr.view_employee_form" />
+      <field name="arch" type="xml">
+        <xpath expr="//div[@name='button_box']" position="inside">
+          <button name="action_view_quality_control" type="object"
+            class="oe_stat_button"
+            icon="fa-check-circle-o"
+            attrs="{'invisible': [('count_quality_control','=',0)]}">
+            <field name="count_quality_control" widget="statinfo"
+              string="Llamadas atención" />
+          </button>
+        </xpath>
+      </field>
+    </record>
+
+  </data>
+</odoo>
