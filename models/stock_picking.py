@@ -25,9 +25,50 @@ class StockPicking(models.Model):
     stock_picking_type_product_request = fields.Boolean(string='Albaran para Solicitar Materiales', compute='_computed_type_picking_product_request')
     product_request_warehouse = fields.Boolean(string='Albaran de Solicitud de Materiales', compute='_computed_type_picking_product_request')
     area_product_request_id = fields.Many2one('production.area', string="Area Solicitada")
-    actual_production_area_id = fields.Many2one('production.area', string="Area de Producción Actual")
+    actual_production_area_id = fields.Many2one('production.area', string="Area de Producción Actual", track_visibility='always')
+    actual_user_production_area_id = fields.Many2many('res.users', string="Usuario de Producción Actual", track_visibility='always')
     count_point_quality_control = fields.Integer(string="Cantidad de Controles de calidad", compute='_computed_count_point_quality_control')
-    point_quality_control = fields.Many2one('point.quality.control', string="Vale de Error o Garantia")
+    point_quality_control = fields.Many2one('point.quality.control', string="Vale de Error o Garantia", track_visibility='always')
+    quality_control_check = fields.Boolean(string="Se genera Punto de control", compute='_compute_quality_control_check')
+    stage_production_ids = fields.One2many('stage.production', 'stock_picking_id', string='Etapas de producción', track_visibility='always')
+    production_stock_picking_active = fields.Boolean(string='Producción Activa', compute='_compute_production_stock_picking_active')
+
+    def _compute_production_stock_picking_active(self):
+        for rec in self:
+            active = False
+            for stage in rec.stage_production_ids:
+                if stage.user_id == self.env.user and not stage.date_end:
+                    active = True
+            rec.production_stock_picking_active = active
+
+    def set_date_start_stage_production(self):
+        for rec in self:
+            if not self.env.user.production_area_id:
+                raise UserError('Su usuario no tiene establecida un area de Producción, favor solicitar que le establezcan una en su usuario')
+            for line in rec.stage_production_ids:
+                if line.user_id == self.env.user and not line.date_end:
+                    raise UserError("Usted tiene un ingreso activo en este albaran, cierrelo antes de ingresar nuevamente.")
+            line_stage = self.env['stage.production'].create({'user_id':self.env.user.id,
+                                                              'date_start':datetime.now(),
+                                                              'production_area_id':self.env.user.production_area_id.id, 
+                                                              'stock_picking_id':rec.id})
+            print(rec.actual_user_production_area_id)
+            rec.write({'actual_production_area_id': self.env.user.production_area_id.id,
+                       'actual_user_production_area_id':[(4, self.env.user.id)]})
+            print(rec.actual_user_production_area_id)
+
+    def set_date_end_stage_production(self):
+        for rec in self:
+            for line in rec.stage_production_ids:
+                if line.user_id == self.env.user and not line.date_end:
+                    line.write({'date_end':datetime.now()})
+            rec.write({'actual_production_area_id': False,
+                       'actual_user_production_area_id':[(3, self.env.user.id)]})
+
+    @api.one
+    def _compute_quality_control_check(self):
+        for rec in self:
+            rec.quality_control_check = rec.picking_type_id.quality_control
 
     @api.one
     def _computed_type_picking_product_request(self):
@@ -38,7 +79,7 @@ class StockPicking(models.Model):
                 rec.stock_picking_type_product_request = False
             if rec.state != 'assigned':
                 rec.stock_picking_type_product_request = False
-                
+
     @api.one
     def _computed_count_product_request(self):
         for rec in self:
@@ -64,7 +105,25 @@ class StockPicking(models.Model):
         res = super(StockPicking, self).create(vals)
         if res.picking_type_id.product_request_warehouse:
             res.write({'product_request_state':'draft'})
+        if res.origin:
+            sale_id = self.env['sale.order'].sudo().search([('name','=',res.origin)])
+            if sale_id:
+                line_stage = self.env['stage.production'].create({'user_id':sale_id.user_id.id,
+                                    'date_start':datetime.now(),
+                                    'production_area_id':sale_id.user_id.production_area_id.id, 
+                                    'stock_picking_id':res.id})
         return res
+
+    def action_assign(self):
+        res = super(StockPicking, self).action_assign()
+        for rec in self:
+            if rec.state == 'assigned':
+                if rec.origin:
+                    sale_id = self.env['sale.order'].sudo().search([('name','=',rec.origin)])
+                    if sale_id:
+                        for line in rec.stage_production_ids:
+                            if line.user_id == sale_id.user_id and not line.date_end:
+                                line.write({'date_end':datetime.now()})
 
     def action_product_request_done(self):
         for rec in self:
@@ -350,3 +409,27 @@ class StockPicking(models.Model):
             "domain": [['id', 'in', point_quality_control.ids]],
             "name": "Puntos de Control de Calidad",
         }
+
+class StageProduction(models.Model):
+    _name = 'stage.production'
+    _description = 'Estados de Producción'
+
+    name = fields.Char('Etapa')
+    date_start = fields.Datetime(string="Ingreso")
+    date_end = fields.Datetime(string="Salida")
+    user_id = fields.Many2one('res.users', string="Usuario")
+    production_area_id = fields.Many2one('production.area', string="Area")
+    stock_picking_id = fields.Many2one('stock.picking', string='Albaran')
+    time = fields.Float(string="Tiempo usado", compute='_compute_time')
+
+    @api.one
+    def _compute_time(self):
+        for rec in self:
+            if rec.date_start and rec.date_end:
+                difference_time = rec.date_end - rec.date_start
+                seconds = difference_time.seconds
+                days = difference_time.days
+                minutes = ((seconds/60)%60)/60.0
+                hours = seconds/3600
+                days = days * 24
+                rec.time = hours + minutes + days

@@ -19,7 +19,6 @@ class SaleOrderLine(models.Model):
             rec.no_update_qty_temp = check_picking
 
     def _action_launch_stock_rule(self):
-        
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         errors = []
         group = False

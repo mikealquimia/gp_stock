@@ -30,6 +30,8 @@
         'views/product_template.xml',
         'views/point_quality_control.xml',
         'views/hr_employee.xml',
+        'views/res_users.xml',
+        'views/sale_order.xml',
         'wizard/set_components_product_request.xml',
         'reports/report_production_day_views.xml',
         'reports/product_request_stock_picking.xml',

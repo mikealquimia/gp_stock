@@ -65,7 +65,8 @@
                         attrs="{'invisible': [('stock_picking_type_product_request','=',False)]}"
                         class="oe_highlight" />
                     <button name="action_quality_control_test"
-                        groups="gp_stock.group_gp_stock_admin_quality_control" string="Control de Calidad"
+                        groups="gp_stock.group_gp_stock_admin_quality_control"
+                        string="Control de Calidad"
                         type="object" />
                 </xpath>
                 <xpath expr="//field[@name='origin']" position="after">
@@ -77,7 +78,8 @@
                     <field name="product_request_state" readonly="1" />
                     <field name="area_product_request_id"
                         attrs="{'invisible': [('area_product_request_id','=',False)]}" />
-                    <field name="actual_production_area_id"/>
+                    <field name="actual_production_area_id" />
+                    <field name="actual_user_production_area_id" widget="many2many_tags" />
                 </xpath>
 
                 <xpath expr="//button[@name='action_picking_move_tree']" position="before">
@@ -97,7 +99,7 @@
                             string="Calidad" />
                     </button>
                 </xpath>
-                <xpath expr="//form/sheet/notebook/page[2]" position="after">
+                <xpath expr="//form/sheet/notebook" position="inside">
                     <page name="purchase_requisition" string="Datos Solicitud"
                         attrs="{'invisible': [('purchase_requisition', '=', False)]}">
                         <group name="Usuario">
@@ -107,6 +109,18 @@
                                 <field name="scheduled_date" string="Fecha a Solicitar" />
                             </group>
                         </group>
+                    </page>
+                    <page name='stage_production' string='Flujo de Producción'>
+                        <field name="stage_production_ids">
+                            <tree create='0'>
+                                <field name="name" invisible="1" />
+                                <field name="date_start" />
+                                <field name="date_end" />
+                                <field name="time" widget="float_time" />
+                                <field name="user_id" />
+                                <field name="production_area_id" />
+                            </tree>
+                        </field>
                     </page>
                 </xpath>
             </field>
@@ -143,6 +157,126 @@
             parent="stock.menu_stock_root"
             groups="gp_stock.group_gp_stock_admin_product_request"
             sequence="1" />
+
+        <record id="stage_production_stock_picking_tree" model="ir.ui.view">
+            <field name="name">Etapas de Producción</field>
+            <field name="model">stock.picking</field>
+            <field name="priority">98</field>
+            <field name="arch" type="xml">
+                <tree string="Flujo de Producción">
+                    <field name="name" />
+                    <field name="origin" />
+                    <field name="state" invisible="1" />
+                    <field name="production_stock_picking_active" invisible="0" />
+                    <button name="set_date_start_stage_production" string="Ingreso"
+                        type="object" />
+                    <button name="set_date_end_stage_production" string="Salida"
+                        type="object" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_production_stock_picking_tree" model="ir.ui.view">
+            <field name="name">Estatus OT</field>
+            <field name="model">stock.picking</field>
+            <field name="priority">98</field>
+            <field name="arch" type="xml">
+                <tree string="Estatus OT" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-danger="state not in ('cancel', 'done') and scheduled_date &lt; current_date">
+                    <field name="name" />
+                    <field name="actual_production_area_id" />
+                    <field name="actual_user_production_area_id" widget="many2many_tags"/>
+                    <field name="scheduled_date" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="stage_production_stock_picking_kanban" model="ir.ui.view">
+            <field name="name">Etapas de Producción</field>
+            <field name="model">stock.picking</field>
+            <field name="priority">97</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name" />
+                    <field name="partner_id" />
+                    <field name="location_dest_id" />
+                    <field name="state" />
+                    <field name="date" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <div t-attf-class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary">
+                                            <a>
+                                                <field name="name" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container o_kanban_card_content">
+                                    <div class="row">
+                                        <div class="col-6 o_kanban_primary_left">
+                                            <button class="btn btn-primary"
+                                                name="set_date_end_stage_production" type="object">
+                                                Salida
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="act_stage_production_stock_picking" model="ir.actions.act_window">
+            <field name="res_model">stock.picking</field>
+            <field name="name">Flujo de Producción</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['&amp;',('picking_type_id.production_area_check','!=',False),('state','=','assigned')]</field>
+            <field name="view_id" ref="stage_production_stock_picking_tree"></field>
+        </record>
+
+        <record id="search_stage_production_stock_picking" model="ir.ui.view">
+            <field name="name">Busqueda de Etapas de Producción</field>
+            <field name="model">stock.picking</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <search string="Search Sales Order">
+                    <field name="name" string="OT" filter_domain="[('name','ilike',self)]" />
+                    <filter string="Mis OT Activas"
+                        domain="[('actual_user_production_area_id','ilike',uid)]"
+                        name="my_ot_actives" />
+                </search>
+            </field>
+        </record>
+
+        <record id="act_our_stage_production_stock_picking" model="ir.actions.act_window">
+            <field name="res_model">stock.picking</field>
+            <field name="name">Mis ordenes activas</field>
+            <field
+                name="view_mode">kanban</field>
+            <field name="view_id"
+                ref="stage_production_stock_picking_kanban"></field>
+            <field name="context">{'search_default_my_ot_actives': 1}</field>
+        </record>
+
+        <menuitem id="menu_stage_produccion_root"
+            name="Etapas de producción"
+            groups="gp_stock.group_gp_stock_user_production"
+            sequence="1" />
+
+        <menuitem id="menu_stage_produccion_pickings"
+            action="act_stage_production_stock_picking"
+            parent="gp_stock.menu_stage_produccion_root"
+            sequence="1" />
+
+        <menuitem id="menu_our_stage_produccion_pickings"
+            action="act_our_stage_production_stock_picking"
+            parent="gp_stock.menu_stage_produccion_root"
+            sequence="2" />
 
     </data>
 </odoo>
