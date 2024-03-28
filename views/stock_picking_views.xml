@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="production_area_stock_picking_form" model="ir.ui.view">
+            <field name="name">production.area.form.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form" />
+            <field name="arch" type="xml">
+                <!--<xpath
+                expr="//sheet/notebook/page[2]/field[@name='move_ids_without_package']/tree/field[@name='product_id']"
+                position="after">
+                <field name="instruction_line"/>
+                <field name="production_area_ids" widget="many2many_tags" options="{'no_create': True}"
+                groups="gp_stock.group_gp_stock_user" attrs="{'column_invisible':
+                [('parent.production_area_check','=',False)]}"/>
+                <field name="production_day_ids" widget="many2many_tags" options="{'no_create': True}"
+                groups="gp_stock.group_gp_stock_user" invisible="1"/>
+                <field name="production_create" invisible="1"/>
+            </xpath>
+            <xpath
+                expr="//sheet/notebook/page[2]/field[@name='move_ids_without_package']/tree/field[@name='product_uom']"
+                position="after">
+                <button name="unlink_production" type="object" string="No Producción" class="btn btn-link"
+                attrs="{'column_invisible': [('production_create', '=', False)]}"
+                groups="gp_stock.group_gp_stock_user"/>
+            </xpath>
+            <xpath
+                expr="//sheet/notebook/page[2]/field[@name='move_ids_without_package']/tree/field[@name='product_uom_qty']"
+                position="after">
+                <field name="product_uom_qty_requisition_done" invisible="1"/>
+                <field name="product_uom_qty_requisition" attrs="{'column_invisible':
+                [('parent.purchase_requisition', '=', False)], 'readonly':
+                [('product_uom_qty_requisition', '=', 'product_uom_qty_requisition_done')]}"/>
+            </xpath>
+            -->
+
+                <xpath expr="//button[@name='action_confirm']" position="after">
+                    <button name="action_production_in" type="object" string="Enviar a Áreas"
+                        attrs="{'invisible': ['|',('in_production','!=',False),('production_area_check','=',False)]}"
+                        groups="gp_stock.group_gp_stock_user" />
+                    <field name="purchase_requisition" invisible="1" />
+                    <field name="production_area_check" invisible="1" />
+                    <field name="product_request_state" invisible="1" />
+                    <field name="stock_picking_type_product_request" invisible="1"/>
+                    <field name="product_request_warehouse" invisible="1"/>
+                    <button name="create_purchase_requisition" type="object"
+                        string="Crear Acuerdo de compra"
+                        attrs="{'invisible': [('purchase_requisition','=',False)]}" />
+                    <button name="action_product_request_warehouse"
+                        groups="gp_stock.group_gp_stock_user_product_request" type="object"
+                        string="Solicitar productos a Bodega"
+                        attrs="{'invisible': ['|',('product_request_state','!=','draft'),('product_request_warehouse','=',False)]}" />
+                    <button name="action_product_request_done"
+                        groups="gp_stock.group_gp_stock_admin_product_request" type="object"
+                        string="Despachar de Bodega" class="oe_highlight" 
+                        attrs="{'invisible': ['|',('product_request_state','!=','done'),('product_request_warehouse','=',False)]}" />
+                    <button name="print_production_request"
+                        groups="gp_stock.group_gp_stock_admin_product_request" type="object"
+                        string="Imprimir Solicitud de Producto"
+                        attrs="{'invisible': [('product_request_warehouse','=',False)]}"/>
+                    <button name="create_product_request"
+                        groups="gp_stock.group_gp_stock_user_product_request" type="object"
+                        string="Crear Solicitudes de Producto"
+                        attrs="{'invisible': [('stock_picking_type_product_request','=',False)]}"
+                        class="oe_highlight"/>
+                </xpath>
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="name_extern" groups="gp_stock.group_gp_stock_user"
+                        attrs="{'invisible': [('production_area_check','=',False)]}" />
+                    <field name="in_production" groups="gp_stock.group_gp_stock_user" invisible="1" />
+                    <field name="purchase_requisition_id"
+                        attrs="{'invisible': [('purchase_requisition','=',False)]}" />
+                    <field name="product_request_state" readonly="1" />
+                    <field name="area_product_request_id" attrs="{'invisible': [('area_product_request_id','=',False)]}"/>
+                </xpath>
+
+                <xpath expr="//button[@name='action_picking_move_tree']" position="before">
+                    <button name="action_view_product_request_related" type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o" attrs="{'invisible': [('count_product_request_stock_picking','=',0)]}"
+                        context="{'tree_view_ref':'gp_stock.product_request_stock_picking_tree'}">
+                        <field name="count_product_request_stock_picking" widget="statinfo"
+                            string="Solicitudes de Producto" />
+                    </button>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[2]" position="after">
+                    <page name="purchase_requisition" string="Datos Solicitud"
+                        attrs="{'invisible': [('purchase_requisition', '=', False)]}">
+                        <group name="Usuario">
+                            <group name="usuario_left" string="Solicitud de Material">
+                                <field name="department_requisition" />
+                                <field name="user_requisition" />
+                                <field name="scheduled_date" string="Fecha a Solicitar" />
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_request_stock_picking_tree" model="ir.ui.view">
+            <field name="name">Solicitud de Producto a Bodega</field>
+            <field name="model">stock.picking</field>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <tree string="Solicitud de Producto a Bodega">
+                    <field name="name" />
+                    <field name="origin" />
+                    <field name="state" invisible="1" />
+                    <field name="date_product_request" />
+                    <field name="product_request_state" invisible="0" />
+                    <button name="action_product_request_done" string="Despachar de Bodega"
+                        type="object" groups="gp_stock.group_gp_stock_admin_product_request"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="act_product_request_stock_picking" model="ir.actions.act_window">
+            <field name="res_model">stock.picking</field>
+            <field name="name">Solicitud de Producto a Bodega</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="product_request_stock_picking_tree"></field>
+            <field name="domain">[('product_request_state','=','done')]</field>
+            <field name="context">{'group_by': ['date_product_request:day']}</field>
+        </record>
+
+        <menuitem id="menu_act_product_request_stock_picking"
+            action="act_product_request_stock_picking"
+            parent="stock.menu_stock_root"
+            groups="gp_stock.group_gp_stock_admin_product_request"
+            sequence="1" />
+
+    </data>
+</odoo>

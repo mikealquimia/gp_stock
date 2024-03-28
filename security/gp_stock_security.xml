@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record model="ir.module.category" id="module_category_gp_stock">
+            <field name="name">Producción</field>
+            <field name="visible" eval="0" />
+        </record>
+
+        <record id="group_gp_stock_user" model="res.groups">
+            <field name="name">Usuario</field>
+            <field name="category_id" ref="module_category_gp_stock"/>
+        </record>
+
+        <record id="group_gp_stock_manager" model="res.groups">
+            <field name="name">Encargado</field>
+            <field name="category_id" ref="module_category_gp_stock"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('gp_stock.group_gp_stock_user'))]"/>
+        </record>
+
+        <record id="group_gp_stock_user_product_request" model="res.groups">
+            <field name="name">Solicitante de Materia Prima a Bodega</field>
+            <field name="category_id" ref="module_category_gp_stock"/>
+        </record>
+
+        <record id="group_gp_stock_admin_product_request" model="res.groups">
+            <field name="name">Encargado de Solicitud de Materia Prima en Bodega</field>
+            <field name="category_id" ref="module_category_gp_stock"/>
+        </record>
+
+    </data>
+</odoo>

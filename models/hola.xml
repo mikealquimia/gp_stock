@@ -1,0 +1,147 @@
+<t t-name="sale.report_saleorder_raw">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="oe_structure" />
+                    <!--<div
+                    style="position: absolute; top:15cm; left:8cm;width:10cm">
+                    <t t-esc="doc.partner_id.parent_id.name"/>-->
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p style="text-align: center;">                               </p>
+                    <p>  </p>
+                    <p> </p>
+                    <p style="text-align: center;"> </p>
+                    <p style="text-align: center;">
+                        <span style="font-size: 18pt;">
+                            <strong>
+                                <span style="font-size: 24pt;"> </span>
+                            </strong>
+                        </span>
+                    </p>
+                    <table height="51" style="width: 1148px;">
+                        <tbody>
+                            <tr>
+                                <td style="width: 10px;"></td>
+                                <td style="width: 1117.453125px; text-align: center;">
+                                    <span style="font-size: 24pt;">
+                                        <strong>
+                                            <t t-esc="doc.partner_id.parent_id.name" />
+                                        </strong>
+                                    </span>
+                                </td>
+                                <td style="width: 10px;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p>
+                        <span style="font-size: 14pt;">   </span>
+                        <span style="font-size: 14pt;">                                             
+                                                                                                   
+                                         </span>
+                    </p>
+                    <table height="5" style="width: 1156px;">
+                        <tbody>
+                            <tr>
+                                <td style="width: 520.875px;"></td>
+                                <td style="width: 311.125px;">
+                                    <span style="font-size: 14pt;">
+                                        <t t-field="doc.date_order" />
+                                    </span>
+                                </td>
+                                <td style="width: 305px;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </t>
+</t>
+<t t-name="sale.report_saleorder_raw">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="oe_structure" />
+                    <!--<div
+                    style="position: absolute; top:15cm; left:8cm;width:10cm">
+                    <t t-esc="doc.partner_id.parent_id.name"/>-->
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p style="text-align: center;">                               </p>
+                    <p>  </p>
+                    <p> </p>
+                    <p style="text-align: center;"> </p>
+                    <p style="text-align: center;">
+                        <span style="font-size: 18pt;">
+                            <strong>
+                                <span style="font-size: 24pt;"> </span>
+                            </strong>
+                        </span>
+                    </p>
+                    <table height="51" style="width: 1148px;">
+                        <tbody>
+                            <tr>
+                                <td style="width: 10px;"></td>
+                                <td style="width: 1117.453125px; text-align: center;">
+                                    <span style="font-size: 24pt;">
+                                        <strong>
+                                            <t t-esc="doc.partner_id.parent_id.name" />
+                                        </strong>
+                                    </span>
+                                </td>
+                                <td style="width: 10px;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p> </p>
+                    <p>
+                        <span style="font-size: 14pt;">   </span>
+                        <span style="font-size: 14pt;">                                             
+                                                                                                   
+                                         </span>
+                    </p>
+                    <table height="5" style="width: 1156px;">
+                        <tbody>
+                            <tr>
+                                <td style="width: 520.875px;"></td>
+                                <td style="width: 311.125px;">
+                                    <span style="font-size: 14pt;">
+                                        <t t-field="doc.date_order" />
+                                    </span>
+                                </td>
+                                <td style="width: 305px;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+            </t>
+        </t>
+    </t>
+</t>

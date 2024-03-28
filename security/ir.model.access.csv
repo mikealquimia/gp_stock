@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_production_area_user,production.area.user,model_production_area,gp_stock.group_gp_stock_user,1,0,0,0
+access_production_area_manager,production.area.manager,model_production_area,gp_stock.group_gp_stock_manager,1,1,1,1
+
+access_production_subarea_user,production.subarea.user,model_production_subarea,gp_stock.group_gp_stock_user,1,0,0,0
+access_production_subarea_manager,production.subarea.manager,model_production_subarea,gp_stock.group_gp_stock_manager,1,1,1,1
+
+access_production_day_user,production.day.user,model_production_day,gp_stock.group_gp_stock_user,1,0,0,0
+access_production_day_manager,production.day.manager,model_production_day,gp_stock.group_gp_stock_manager,1,1,1,1
+
+access_production_day_line_user,production.day.line.user,model_production_day_line,gp_stock.group_gp_stock_user,1,0,0,0
+access_production_day_line_manager,production.day.line.manager,model_production_day_line,gp_stock.group_gp_stock_manager,1,1,1,1
+
+access_stock_move_bom_line,stock.move.bom.line,model_stock_move_bom_line,,1,1,1,1

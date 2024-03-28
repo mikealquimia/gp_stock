@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Area -->
+        <record id="production_area_tree" model="ir.ui.view">
+            <field name="name">production.area.tree</field>
+            <field name="model">production.area</field>
+            <field name="arch" type="xml">
+                <tree string="Áreas de Producción" editable="bottom">
+                    <field name="name"/>
+                    <field name="sub_area"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="act_production_area" model="ir.actions.act_window">
+            <field name="res_model">production.area</field>
+            <field name="name">Áreas de Producción</field>
+            <field name="view_mode">tree</field>
+        </record>
+        
+        <menuitem id="menu_production_area"
+                action="act_production_area"
+                parent="stock.menu_stock_config_settings"
+                groups="gp_stock.group_gp_stock_manager"
+                sequence="6"/>
+
+        <!-- Sub Area -->
+        <record id="production_subarea_tree" model="ir.ui.view">
+            <field name="name">production.subarea.tree</field>
+            <field name="model">production.subarea</field>
+            <field name="arch" type="xml">
+                <tree string="Sub Áreas de Producción" editable="bottom">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="act_production_subarea" model="ir.actions.act_window">
+            <field name="res_model">production.subarea</field>
+            <field name="name">Sub Áreas de Producción</field>
+            <field name="view_mode">tree</field>
+        </record>
+        
+        <menuitem id="menu_production_subarea"
+                action="act_production_subarea"
+                parent="stock.menu_stock_config_settings"
+                groups="gp_stock.group_gp_stock_manager"
+                sequence="7"/>
+    </data>
+
+</odoo>

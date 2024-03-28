@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <record id="stock_request_stock_move_form" model="ir.ui.view">
+      <field name="name">stock.move.product.request</field>
+      <field name="model">stock.move</field>
+      <field name="arch" type="xml">
+        <form string="Componentes">
+          <sheet>
+            <div>
+              <group>
+                <div class="o_row">
+                  <field name="product_id" readonly="1"/>
+                  <field name="product_uom_qty" readonly="1"/>
+                  <field name="product_uom" readonly="1"/>
+                </div>
+                <field name="state" invisible="1"/>
+              </group>
+            </div>
+            <notebook>
+              <page string="Componentes">
+                <field name="bom_line_ids">
+                  <tree editable="bottom">
+                    <field name="product_id" required="1" options="{'no_open':True,'no_create':True}"/>
+                    <field name="product_qty" required="1"/>
+                    <field name="uom_category_id" invisible="1"/>
+                    <field name="uom_id" required="1" options="{'no_open':True,'no_create':True}"/>
+                    <field name="area_id" required="1" options="{'no_open':True,'no_create':True}"/>
+                    <field name="warehouse_id" required="1" options="{'no_open':True,'no_create':True}"/>
+                  </tree>
+                </field>
+              </page>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+  </data>
+</odoo>

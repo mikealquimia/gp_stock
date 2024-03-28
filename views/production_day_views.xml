@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="production_day_tree" model="ir.ui.view">
+            <field name="name">production.day.tree</field>
+            <field name="model">production.day</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree string="Programas de Áreas">
+                    <field name="name"/>
+                    <field name="production_area_id"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="production_day_form" model="ir.ui.view">
+            <field name="name">production.day.form</field>
+            <field name="model">production.day</field>
+            <field name="arch" type="xml">
+                <form string="Programa de Área">
+                    <header>
+                        <button name="action_open" string="Pasar a Borrador" type="object" states="progress" groups="gp_stock.group_gp_stock_manager"/>
+                        <button name="action_progress" string="En Progreso" type="object" states="draft" groups="gp_stock.group_gp_stock_manager"/>
+                        <field name="create_next_boolean" invisible="1"/>
+                        <button name="create_next" string="Crear nuevo Programa" type="object" class="oe_highlight" attrs="{'invisible': [('create_next_boolean','=',False)]}" groups="gp_stock.group_gp_stock_manager"/>
+                        <button name="action_close" string="Cerrar Programa" type="object" states="progress" class="oe_highlight" groups="gp_stock.group_gp_stock_manager"/>
+                        <field name="state"  widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <div>
+                            <group>
+                                <group>
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="production_area_id" required="1" options="{'no_create': True}"/>
+                                    <field name="date_start" readonly="1"/>
+                                    <field name="date_end" readonly="1"/>
+                                </group>
+                                <group >
+                                    <field name="user_id"/>
+                                    <field name="previus_production_id" readonly="1"/>
+                                    <field name="next_production_id" readonly="1"/>
+                                </group>
+                            </group>
+                        </div>
+                        <notebook>
+                            <page string="Líneas del Programa de Área">
+                                <field name="line_ids">
+                                    <tree create="0" editable="bottom">
+                                        <field name="name" invisible="1"/>
+                                        <field name="production_day" invisible="1"/>
+                                        <field name="stock_picking_id"/>
+                                        <field name="origin_id"/>
+                                        <field name="product_id"/>
+                                        <field name="sub_area_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                        <field name="product_qty"/>
+                                        <field name="production_area_id" invisible="1"/>
+                                        <field name="date_in"/>
+                                        <field name="date_out"/>
+                                        <field name="employee_id"/>
+                                        <field name="done_line" invisible="1"/>
+                                        <field name="cancel_line" invisible="1"/>
+                                        <button name="action_done" type="object" string="Terminar" class="btn btn-link" attrs="{'invisible': ['|',('done_line', '=', True),('cancel_line', '=', True)]}"/>
+                                        <button name="action_cancel" type="object" string="Cancelar" attrs="{'invisible': ['|',('done_line', '=', True),('cancel_line', '=', True)]}"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="act_production_day" model="ir.actions.act_window">
+            <field name="res_model">production.day</field>
+            <field name="name">Programa de Área</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="production_day_tree"></field>
+        </record>
+        
+        <menuitem id="menu_production_day"
+                action="act_production_day"
+                parent="stock.menu_stock_root"
+                groups="gp_stock.group_gp_stock_user"
+                sequence="5"/>
+    </data>
+
+</odoo>
