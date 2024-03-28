@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from . import res_users
 from . import production_area
 from . import production_day
 from . import stock_move
@@ -12,4 +13,3 @@ from . import quality_control
 from . import product_category
 from . import product_template
 from . import hr_employee
-from . import res_users

@@ -12,7 +12,7 @@
     'author': "My Company",
     'website': "http://www.yourcompany.com",
     'category': 'Uncategorized',
-    'version': '0.1',
+    'version': '0.1.0.1',
     'depends': ['base', 'stock', 'hr', 'purchase_requisition','mrp'],
     'data': [
         'security/gp_stock_security.xml',
