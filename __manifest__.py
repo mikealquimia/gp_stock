@@ -25,6 +25,8 @@
         'views/stock_picking_type_views.xml',
         'views/mrp_bom_views.xml',
         'views/stock_warehouse_views.xml',
+        'views/product_category.xml',
+        'views/product_template.xml',
         'wizard/set_components_product_request.xml',
         'reports/report_production_day_views.xml',
         'reports/product_request_stock_picking.xml',

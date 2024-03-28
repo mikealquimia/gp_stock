@@ -29,5 +29,15 @@
             <field name="category_id" ref="module_category_gp_stock"/>
         </record>
 
+        <record id="group_gp_stock_user_quality_control" model="res.groups">
+            <field name="name">Usuario de Puntos de Control de Calidad</field>
+            <field name="category_id" ref="module_category_gp_stock"/>
+        </record>
+
+        <record id="group_gp_stock_admin_quality_control" model="res.groups">
+            <field name="name">Administrador de Puntos de Control de Calidad</field>
+            <field name="category_id" ref="module_category_gp_stock"/>
+        </record>
+
     </data>
 </odoo>
